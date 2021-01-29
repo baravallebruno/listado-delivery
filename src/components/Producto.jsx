@@ -7,6 +7,8 @@ const Producto = ({ sabor, ingredientes }) => {
 
   const amount = cantidadproducto.map((valor) => {
     if (valor.id === sabor) return valor.cant;
+    // eslint-disable-next-line
+    return;
   });
 
   const canti = amount.filter((numero) => numero !== undefined);

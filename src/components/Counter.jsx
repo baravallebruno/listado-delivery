@@ -18,11 +18,14 @@ const Counter = ({ sabor }) => {
   });
 
   //convertir ID en string
+  // eslint-disable-next-line
   const id = idMap.filter((value) => value !== undefined).toString();
 
   //Extraer cantidad de array de objetos en state
   const amount = cantidadproducto.map((valor) => {
     if (valor.id === sabor) return valor.cant;
+    // eslint-disable-next-line
+    return;
   });
   const canti = amount.filter((numero) => numero !== undefined);
   const cantEmpanadas = canti[0];
@@ -73,6 +76,7 @@ const Counter = ({ sabor }) => {
         setValorinput(cant.cant);
       }
     });
+    // eslint-disable-next-line
   }, [cantidadproducto]);
 
   return (
