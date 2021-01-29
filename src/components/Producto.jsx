@@ -1,34 +1,31 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import Counter from "./Counter";
 import { PedidosContext } from "../context/PedidosContext";
 
 const Producto = ({ sabor, ingredientes }) => {
-  const [cantidad, setCantidad] = useState(0);
+  const { cantidadproducto } = useContext(PedidosContext);
 
-  const { cantidadproducto, setCantidadproducto } = useContext(PedidosContext);
+  const amount = cantidadproducto.map((valor) => {
+    if (valor.id === sabor) return valor.cant;
+  });
 
-  const cantidadEmp = (e) => {
-    setCantidadproducto([
-      ...cantidadproducto,
-      {
-        id: sabor,
-        cant: inputRef.current.value
-      }
-    ]);
-  };
+  const canti = amount.filter((numero) => numero !== undefined);
+  const cantEmpanadas = canti[0];
 
   return (
-    <div className="card shadow p-2 mb-3 bg-white rounded border-0">
+    <div className="card mb-2 py-2 rounded bg-white border-white">
       <div className="card-body">
         <div className="row d-flex align-items-center">
-          <div className="card-text col-8">{sabor}</div>
+          <div
+            className={`card-text fw-bold col-6 ${
+              cantEmpanadas > 0 ? "text-danger" : "text-secondary"
+            }`}
+          >
+            {sabor}
+          </div>
 
-          <div className="col-4">
-            <Counter
-              sabor={sabor}
-              setCantidad={setCantidad}
-              cantidad={cantidad}
-            />
+          <div className="col-6">
+            <Counter sabor={sabor} />
           </div>
         </div>
       </div>

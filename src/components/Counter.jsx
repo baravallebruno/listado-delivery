@@ -1,36 +1,103 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { PedidosContext } from "../context/PedidosContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 
-const Counter = ({ sabor, cantidad, setCantidad }) => {
-  //funcion aumentar
-  const aumentar = () => {
-    setCantidad(cantidad + 1);
+const Counter = ({ sabor }) => {
+  //State que viene del context
+  const { cantidadproducto, setCantidadproducto } = useContext(PedidosContext);
+
+  const [valorinput, setValorinput] = useState(0);
+
+  // Extraer ID de array de objetos de state
+  const idMap = cantidadproducto.map((valor) => {
+    if (valor.id === sabor) {
+      return valor.id;
+    }
+    return valor;
+  });
+
+  //convertir ID en string
+  const id = idMap.filter((value) => value !== undefined).toString();
+
+  //Extraer cantidad de array de objetos en state
+  const amount = cantidadproducto.map((valor) => {
+    if (valor.id === sabor) return valor.cant;
+  });
+  const canti = amount.filter((numero) => numero !== undefined);
+  const cantEmpanadas = canti[0];
+
+  //Funcion que aumenta el counter
+  const aumentar = (e) => {
+    e.preventDefault();
+    setCantidadproducto(
+      cantidadproducto.map((valor) => {
+        if (valor.id === sabor) {
+          return { ...valor, cant: valor.cant + 1 };
+        }
+        return valor;
+      })
+    );
   };
 
-  const disminuir = () => {
-    if (cantidad < 1) return;
-    setCantidad(cantidad - 1);
+  //Funcion que disminuye el counter
+  const disminuir = (e) => {
+    e.preventDefault();
+
+    setCantidadproducto(
+      cantidadproducto.map((valor) => {
+        if (valor.id === sabor) {
+          if (valor.cant === 0) return { ...valor, cant: valor.cant };
+          return { ...valor, cant: valor.cant - 1 };
+        }
+        return valor;
+      })
+    );
   };
+
+  const actualizarState = (e) => {
+    cantidadproducto.forEach((valor) => {
+      if (valor.id === sabor) {
+        setCantidadproducto(...cantidadproducto, { cant: e.target.value });
+      }
+      return valor;
+    });
+
+    //setCantidadproducto(empUpdated);
+  };
+
+  useEffect(() => {
+    cantidadproducto.forEach((cant) => {
+      if (cant.id === sabor) {
+        if (cant.cant < 0) return;
+        setValorinput(cant.cant);
+      }
+    });
+  }, [cantidadproducto]);
 
   return (
-    <div className="input-group">
+    <div className="counter">
       <button
-        className={`btn btn-primary fw-bold border-end-0 ${
-          cantidad === 0 ? "disabled" : null
+        className={`btn btn-outline-danger btn-lg fw-bold boton ${
+          cantEmpanadas <= 0 ? "disabled" : null
         }`}
         onClick={disminuir}
       >
-        -
+        <FontAwesomeIcon icon={faMinus} />
       </button>
       <input
-        className="form-control border-0 fw-bold text-primary text-center cantidad"
+        className={`form-control border-0 text-center cantidad ${
+          cantEmpanadas === 0 ? "text-secondary" : "text-danger"
+        }`}
         type="number"
-        value={cantidad}
+        value={valorinput}
+        onChange={actualizarState}
       />
       <button
-        className="btn btn-primary fw-bold border-start-0"
+        className="btn btn-outline-danger btn-lg fw-bold boton"
         onClick={aumentar}
       >
-        +
+        <FontAwesomeIcon icon={faPlus} />
       </button>
     </div>
   );
