@@ -52,6 +52,9 @@ input[type="number"]::-webkit-inner-spin-button {
   box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
 }
 
+.form-control[readonly] {
+  background-color: transparent;
+}
 .btn-principal {
   border-radius: 1.8rem !important;
 }
@@ -70,6 +73,101 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .carita {
-  font-size: 4rem;
-  margin-top: 5rem;
+  font-size: 3rem;
+  margin-top: 4rem;
+}
+
+.pedido-total {
+  position: fixed;
+  right: 0;
+  bottom: calc(112px + 0.75rem);
+  left: 0;
+  max-height: 75%;
+  z-index: 1030;
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+  border: none;
+}
+
+.btn-pedido {
+  color: #6c757d;
+  background-color: #f8f9fa;
+  border-radius: 50%;
+  font-size: 1rem;
+  padding: 0.5rem;
+  width: 40px;
+  height: 40px;
+  border: none;
+  margin-left: 1rem;
+}
+
+.btn-pedido:hover {
+  color: #dc3545;
+}
+
+.btn-pedido:focus {
+  outline: 0;
+  background-color: #dc3545;
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+  color: white;
+}
+
+.nombre-pedido {
+  line-height: 1rem;
+  font-size: 1.2rem;
+  margin-bottom: 0;
+}
+
+.w-70 {
+  width: 70% !important;
+}
+
+.fondo {
+  z-index: 1029;
+  position: fixed;
+  right: 0;
+  bottom: 112px;
+  left: 0;
+  background-color: rgba(33, 37, 41, 0.6);
+}
+
+.logo {
+  height: 4rem;
+  transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.logo-grande {
+  height: 7rem;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.text-claro {
+  color: #e2e2e2;
+}
+
+@media (min-width: 576px) {
+  .counter {
+    width: 50%;
+    margin-right: 1.4rem;
+    margin-left: auto;
+  }
+
+  .footer {
+    width: 50%;
+  }
+
+  .pedido-total {
+    position: fixed;
+    right: 0;
+    bottom: calc(112px + 0.75rem);
+    left: 0;
+    max-height: 75%;
+    max-width: 48%;
+    z-index: 1030;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+  }
 }

@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
 
 //crear el context
 export const PedidosContext = createContext();
@@ -23,13 +23,46 @@ const PedidosProvider = (props) => {
 
   const [error, setError] = useState(false);
 
+  const [pedidoseleccionado, setPedidoseleccionado] = useState(null);
+
+  const [pedido, setPedido] = useState({
+    nombre: "", //string
+    orden: null, //array objetos
+    precio: null, //numero
+    id: "" //string
+  });
+
+  let pedidosiniciales = JSON.parse(localStorage.getItem("pedidos"));
+  if (!pedidosiniciales) {
+    pedidosiniciales = [];
+  }
+
+  //array de pedidos en state
+  const [pedidos, setPedidos] = useState(pedidosiniciales);
+
+  //useEffect para revisar pedidos en el localStorage
+  useEffect(() => {
+    if (pedidosiniciales) {
+      localStorage.setItem("pedidos", JSON.stringify(pedidos));
+    } else {
+      localStorage.setItem("pedidos", JSON.stringify([]));
+    }
+    // eslint-disable-next-line
+  }, [pedidos]);
+
   return (
     <PedidosContext.Provider
       value={{
         cantidadproducto,
         error,
+        pedidoseleccionado,
+        pedido,
+        pedidos,
         setCantidadproducto,
-        setError
+        setError,
+        setPedidoseleccionado,
+        setPedido,
+        setPedidos
       }}
     >
       {props.children}

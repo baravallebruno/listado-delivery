@@ -1,9 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
+import { PedidosContext } from "../context/PedidosContext";
+import Logo from "../assests/Logo.svg";
 
 const Header = () => {
+  const { pedido, pedidos } = useContext(PedidosContext);
+
+  const { nombre } = pedido;
+
   return (
-    <nav className="navbar navbar-dark bg-dark justify-content-center">
-      <span className="navbar-brand mb-0 py-4 h1">PEDIDOS EMPANADAS</span>
+    <nav className="navbar navbar-dark bg-dark justify-content-center top p-3 shadow-sm">
+      <img
+        src={Logo}
+        alt="Logo"
+        className={!nombre && pedidos.length === 0 ? "logo-grande" : "logo"}
+      />
     </nav>
   );
 };

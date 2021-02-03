@@ -1,89 +1,87 @@
 import React, { useContext, useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { PedidosContext } from "../context/PedidosContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 
 const Counter = ({ sabor }) => {
   //State que viene del context
-  const { cantidadproducto, setCantidadproducto } = useContext(PedidosContext);
+  const {
+    cantidadproducto,
+    setCantidadproducto,
+    pedidoseleccionado
+  } = useContext(PedidosContext);
 
   const [valorinput, setValorinput] = useState(0);
 
-  // Extraer ID de array de objetos de state
-  const idMap = cantidadproducto.map((valor) => {
-    if (valor.id === sabor) {
-      return valor.id;
-    }
-    return valor;
-  });
-
-  //convertir ID en string
-  // eslint-disable-next-line
-  const id = idMap.filter((value) => value !== undefined).toString();
-
-  //Extraer cantidad de array de objetos en state
-  const amount = cantidadproducto.map((valor) => {
-    if (valor.id === sabor) return valor.cant;
-    // eslint-disable-next-line
-    return;
-  });
-  const canti = amount.filter((numero) => numero !== undefined);
-  const cantEmpanadas = canti[0];
+  //funcion que actualiza la cantidad de empanadas en el array
+  const actualizarCantidadEmpanadas = (val) => {
+    const cantidadproductonueva = cantidadproducto.map((producto) => {
+      if (producto.id === sabor) {
+        return { ...producto, cant: val };
+      }
+      return producto;
+    });
+    setCantidadproducto(cantidadproductonueva);
+  };
 
   //Funcion que aumenta el counter
   const aumentar = (e) => {
     e.preventDefault();
-    setCantidadproducto(
-      cantidadproducto.map((valor) => {
-        if (valor.id === sabor) {
-          return { ...valor, cant: valor.cant + 1 };
-        }
-        return valor;
-      })
-    );
+    const newvalorinput = valorinput + 1;
+    setValorinput(newvalorinput);
+
+    actualizarCantidadEmpanadas(newvalorinput);
   };
 
   //Funcion que disminuye el counter
   const disminuir = (e) => {
     e.preventDefault();
 
-    setCantidadproducto(
-      cantidadproducto.map((valor) => {
-        if (valor.id === sabor) {
-          if (valor.cant === 0) return { ...valor, cant: valor.cant };
-          return { ...valor, cant: valor.cant - 1 };
-        }
-        return valor;
-      })
-    );
-  };
-
-  const actualizarState = (e) => {
-    cantidadproducto.forEach((valor) => {
-      if (valor.id === sabor) {
-        setCantidadproducto(...cantidadproducto, { cant: e.target.value });
-      }
-      return valor;
-    });
-
-    //setCantidadproducto(empUpdated);
+    const newvalorinput = valorinput - 1;
+    if (valorinput < 1) {
+      return;
+    } else {
+      setValorinput(newvalorinput);
+    }
+    actualizarCantidadEmpanadas(newvalorinput);
   };
 
   useEffect(() => {
-    cantidadproducto.forEach((cant) => {
-      if (cant.id === sabor) {
-        if (cant.cant < 0) return;
-        setValorinput(cant.cant);
-      }
-    });
+    //effect coloca los valores del pedido seleccionado en el state
+
+    if (pedidoseleccionado !== null) {
+      const arrnuevacantidad = pedidoseleccionado.orden;
+
+      const newcantidadproducto = cantidadproducto.map((item) => {
+        arrnuevacantidad.forEach((prod) => {
+          if (prod.id === item.id) {
+            cantidadproducto.splice(cantidadproducto.indexOf(item), 1, prod);
+          }
+          return;
+        });
+        return item;
+      });
+
+      setCantidadproducto(newcantidadproducto);
+
+      arrnuevacantidad.forEach((cant) => {
+        if (cant.id === sabor) {
+          if (cant.cant < 0) return;
+          setValorinput(cant.cant);
+        }
+      });
+    } else {
+      setValorinput(0);
+    }
     // eslint-disable-next-line
-  }, [cantidadproducto]);
+  }, [pedidoseleccionado]);
 
   return (
     <div className="counter">
       <button
         className={`btn btn-outline-danger btn-lg fw-bold boton ${
-          cantEmpanadas <= 0 ? "disabled" : null
+          valorinput <= 0 ? "disabled" : null
         }`}
         onClick={disminuir}
       >
@@ -91,11 +89,11 @@ const Counter = ({ sabor }) => {
       </button>
       <input
         className={`form-control border-0 text-center cantidad ${
-          cantEmpanadas === 0 ? "text-secondary" : "text-danger"
+          valorinput === 0 ? "text-secondary" : "text-danger"
         }`}
         type="number"
         value={valorinput}
-        onChange={actualizarState}
+        readOnly
       />
       <button
         className="btn btn-outline-danger btn-lg fw-bold boton"
@@ -105,6 +103,10 @@ const Counter = ({ sabor }) => {
       </button>
     </div>
   );
+};
+
+Counter.propTypes = {
+  sabor: PropTypes.string.isRequired
 };
 
 export default Counter;
