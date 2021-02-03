@@ -11,12 +11,14 @@ const Producto = ({ sabor, ingredientes }) => {
   useEffect(() => {
     const amount = cantidadproducto.map((valor) => {
       if (valor.id === sabor) return valor.cant;
-      return valor;
+      return undefined;
     });
 
     const canti = amount.filter((numero) => numero !== undefined);
     const cantEmpanadas = canti[0];
+
     setCantidadempanadas(cantEmpanadas);
+
     // eslint-disable-next-line
   }, [cantidadproducto, pedidoseleccionado]);
 
@@ -42,8 +44,7 @@ const Producto = ({ sabor, ingredientes }) => {
 };
 
 Producto.propTypes = {
-  sabor: PropTypes.string.isRequired,
-  ingredientes: PropTypes.array.isRequired
+  sabor: PropTypes.string.isRequired
 };
 
 export default Producto;
